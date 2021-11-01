@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>程序设计的基本元素 - 计算机程序的构造和解释</title>
+        <title>组合式的求值 - 计算机程序的构造和解释</title>
         <!-- Custom HTML head -->
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_1.html"><strong aria-hidden="true">1.</strong> 构造过程抽象</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1.html" class="active"><strong aria-hidden="true">1.1.</strong> 程序设计的基本元素</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1_1.html"><strong aria-hidden="true">1.1.1.</strong> 表达式</a></li><li class="chapter-item expanded "><a href="chapter_1_1_2.html"><strong aria-hidden="true">1.1.2.</strong> 命名和环境</a></li><li class="chapter-item expanded "><a href="chapter_1_1_3.html"><strong aria-hidden="true">1.1.3.</strong> 组合式的求值</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_1.html"><strong aria-hidden="true">1.</strong> 构造过程抽象</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1.html"><strong aria-hidden="true">1.1.</strong> 程序设计的基本元素</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1_1.html"><strong aria-hidden="true">1.1.1.</strong> 表达式</a></li><li class="chapter-item expanded "><a href="chapter_1_1_2.html"><strong aria-hidden="true">1.1.2.</strong> 命名和环境</a></li><li class="chapter-item expanded "><a href="chapter_1_1_3.html" class="active"><strong aria-hidden="true">1.1.3.</strong> 组合式的求值</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -134,28 +134,14 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h2 id="11-程序设计的基本元素"><a class="header" href="#11-程序设计的基本元素">1.1 程序设计的基本元素</a></h2>
-<p>一个强有力的程序设计语言，不仅是一种指挥计算机执行任务的方式，它还应该成为一种框架，使我们能够在其中组织自己有关计算过程的思想。这样，当我们描述一个语言时，就需要将注意力特别放在这一语言所提供的，能够将简单的认识组合起来形成更复杂认识的方法方面。每一种强有力的语言都为此提供了三种机制。</p>
-<ul>
-<li><strong>基本表达形式</strong> ，用于表示语言所关心的最简单的个体。</li>
-<li><strong>组合的方法</strong> ，通过它们可以从较简单的东西出发构造出复合的元素。</li>
-<li><strong>抽象的方法</strong> ，通过它们可以为复合对象命名，并将它们当作单元去操作。</li>
-</ul>
-<p>在程序设计中，我们需要处理两类要素：过程和数据（以后读者将会发现，它们实际上并不是这样严格分离的）。非形式地说，数据是一种我们希望去操作的“东西”，而过程就是有关操作这些数据的规则的描述。这样，任何强有力的程序设计语言都必须能表述基本的数据和基本的过程，还需要提供对过程和数据进行组合和抽象的方法。</p>
-<p>本章只处理简单的数值数据，这就使我们可以把注意力集中到过程构造的规则方面<sup class="footnote-reference"><a href="#4">1</a></sup>。在随后几章里我们将会看到，用于构造过程的这些规则同样也可以用于操作各种数据。</p>
-<div class="footnote-definition" id="4"><sup class="footnote-definition-label">1</sup>
-<p>将数值作为“简单数据”看待实际上完全是一种虚张声势。事实上，对于数值的处理是任何程序设计语言里最错综复杂而且也是最迷惑人的事项之一，其中涉及的典型问题包括，某些计算机系统区分了 <strong>整数</strong> （例如 <code>2</code> ）和 <strong>实数</strong> （例如 <code>2.71</code> ）。那么实数 <code>2.00</code> 和整数 <code>2</code> 不同吗？用于整数的算术运算是否与用于实数的运算相同呢？用 <code>6</code> 除以 <code>2</code> 的结果是 <code>3</code> 还是 <code>3.0</code> ？我们可以表示的最大的数是多少？最多能表示的精度包含了多少个十进制位？整数的表示范围与实数一样吗？显然，上述这些问题以及许多其他问题，都会带来有关舍入和截断误差的一系列问题—这就是数值分析的整个科学领域，因为我们在本书中主要关心的是大规模程序的设计，而不是数值技术，因此将忽略对这些问题的讨论。本章中有关数值的实例将没有常规的舍入动作，而如果对非整数使用具有有限的十进制位数精度的算术运算，就会看到这方面的情况。</p>
-</div>
+                        <h3 id="113-组合式的求值"><a class="header" href="#113-组合式的求值">1.1.3 组合式的求值</a></h3>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="chapter_1.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="chapter_1_1_2.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
-                            </a>
-                            <a rel="next" href="chapter_1_1_1.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
                     </nav>
@@ -163,11 +149,8 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="chapter_1.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="chapter_1_1_2.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
-                    </a>
-                    <a rel="next" href="chapter_1_1_1.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 
