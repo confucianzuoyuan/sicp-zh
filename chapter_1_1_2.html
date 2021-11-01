@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>表达式 - 计算机程序的构造和解释</title>
+        <title>命名和环境 - 计算机程序的构造和解释</title>
         <!-- Custom HTML head -->
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
@@ -75,7 +75,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_1.html"><strong aria-hidden="true">1.</strong> 构造过程抽象</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1.html"><strong aria-hidden="true">1.1.</strong> 程序设计的基本元素</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1_1.html" class="active"><strong aria-hidden="true">1.1.1.</strong> 表达式</a></li><li class="chapter-item expanded "><a href="chapter_1_1_2.html"><strong aria-hidden="true">1.1.2.</strong> 命名和环境</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_1.html"><strong aria-hidden="true">1.</strong> 构造过程抽象</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1.html"><strong aria-hidden="true">1.1.</strong> 程序设计的基本元素</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1_1.html"><strong aria-hidden="true">1.1.1.</strong> 表达式</a></li><li class="chapter-item expanded "><a href="chapter_1_1_2.html" class="active"><strong aria-hidden="true">1.1.2.</strong> 命名和环境</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -134,65 +134,40 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h3 id="111-表达式"><a class="header" href="#111-表达式">1.1.1 表达式</a></h3>
-<p>开始做程序设计，最简单的方式就是去观看一些与 Lisp 方言 Scheme 解释器交互的典型实例。设想你坐在一台计算机的终端前，用键盘输入了一个 <strong>表达式</strong> ，解释器的响应就是将它对这一表达式的 <strong>求值</strong> 结果显示出来。</p>
-<p>你可以键入的一种基本表达式就是数（更准确地说，你键入的是由数字组成的表达式，它表示的是以 10 作为基数的数）。如果你给 Lisp 一个数</p>
-<pre><code>486
+                        <h3 id="112-命名和环境"><a class="header" href="#112-命名和环境">1.1.2 命名和环境</a></h3>
+<p>程序设计语言中一个必不可少的方面，就是它需要提供一种通过名字去使用计算对象的方式。我们将名字标识符称为 <strong>变量</strong> ，它的 <strong>值</strong> 也就是它所对应的那个对象。</p>
+<p>在 Lisp 方言 Scheme 里，给事物命名通过 <code>define</code> （定义）的方式完成，输入：</p>
+<pre><code>(define size 2)
 </code></pre>
-<p>解释器的响应是打印出</p>
-<pre><code>486
-</code></pre>
-<p>可以用表示基本过程的表达形式（例如 <code>+</code> 或者 <code>*</code> ），将表示数的表达式组合起来，形成复合表达式，以表示求要把有关过程应用于这些数。例如：</p>
-<pre><code>(+ 137 349)
-486
-
-(- 1000 334)
-666
-
-(* 5 99)
-495
-
-(/ 10 5)
+<p>会导致解释器将值 <code>2</code> 与名字 <code>size</code> 相关联。一旦名字 <code>size</code> 与 <code>2</code> 关联之后，我们就可以通过这个名字去引用值 <code>2</code> 了：</p>
+<pre><code>size
 2
 
-(+ 2.7 10)
-12.7
+(* 5 size)
+10
 </code></pre>
-<p>像上面这样的表达式称为 <strong>组合式</strong> ，其构成方式就是用一对括号括起来一些表达式，形成一个表，用于表示一个过程应用。在表里最左的元素称为 <strong>运算符</strong> ，其他元素都称为 <strong>运算对象</strong> 。要得到这种组合式的值，采用的方式就是将由运算符所刻画的过程应用于有关的 <strong>实际参数</strong> ，而所谓实际参数也就是那些运算对象的值。</p>
-<p>将运算符放在所有运算对象左边，这种形式称为 <strong>前缀</strong> 表示。刚开始看到这种表示时会感到有些不习惯，因为它与常规数学表示差别很大。然后前缀表示也有一些有点，其中之一就是它完全适用于可能带有任意个实参的过程，例如在下面实例中的情况：</p>
-<pre><code>(+ 21 35 12 7)
-75
+<p>下面是另外几个使用 <code>define</code> 的例子：</p>
+<pre><code>(define pi 3.14159)
 
-(* 25 4 12)
-1200
+(define radius 10)
+
+(* pi (* radius radius))
+314.159
+
+(define circumference (* 2 pi radius))
+
+circumference
+62.8318
 </code></pre>
-<p>在这里不会出现歧义，因为运算符总是最左边的元素，而整个表达式的范围也由括号界定。</p>
-<p>前缀表示的第二个优点是它可以直接扩充，允许出现组合式 <strong>嵌套</strong> 的情况，也就是说，允许组合式的元素本身又是组合式：</p>
-<pre><code>(+ (* 3 5) (- 10 6))
-19
-</code></pre>
-<p>原则上讲，对于这种嵌套的深度，以及 Lisp 解释器可以求值的表达式的整体复杂度，都没有任何限制。倒是我们自己有可能被一些并不很复杂的表达式搞糊涂，例如：</p>
-<pre><code>(+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))
-</code></pre>
-<p>对于这个表达式，解释器可以马上求值出 <code>57</code> 。将上述表达式写成下面的形式有助于阅读：</p>
-<pre><code>(+ (* 3
-      (+ (* 2 4)
-         (+ 3 5)))
-   (+ (- 10 7)
-      6))
-</code></pre>
-<p>这就是遵循一种称为 <strong>美观打印</strong> 的格式规则。按照这种规则，在写一个很长的组合式时，我们令其中的各个运算对象垂直对齐。这样缩格排列的结果能很好地显示出表达式的结构。</p>
-<p>即使对于非常复杂的表达式，解释器也总是按同样的基本循环运作：从终端读入一个表达式，对这个表达式求值，而后打印出得到的结果。这种运作模式常常被人们说成是解释器运行在一个 <strong>读入—求值—打印 循环</strong> 之中。请特别注意，在这里完全没有必要显式地去要求解释器打印表达式的值。</p>
+<p><code>define</code> 是我们所用的语言里最简单的抽象方法，它允许我们用一个简单的名字去引用一个组合运算的结果，例如上面算出的 <code>circumference</code> 。一般而言，计算得到的对象完全可以具有非常复杂的结构，如果每次需要使用它们时，都必须记住并重复地写出它们的细节，那将是极端不方便的事情。实际上，构造一个复杂的程序，也就是为了去一步步地创建出越来越复杂的计算性对象。解释器使这种逐步的程序构造过程变得非常方便，因为我们可以通过一系列交互式动作，逐步创建起所需要的名字—对象关联。这种特征鼓励人们采用递增的方式去开发和调试程序。在很大程度上，这一情况也出于另一个事实，那就是，一个 Lisp 程序通常总是由一大批相对简单的过程组成的。</p>
+<p>应该看到，我们可以将值与符号关联，而后又能提取出这些值，这意味着解释器必须维护某种存储能力，以便保持有关的名字—值对偶的轨迹。这种存储被称为 <strong>环境</strong> （更精确地说，是 <strong>全局环境</strong> ，因为我们以后将看到，在一个计算过程中完全可能涉及若干不同环境）。</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="chapter_1_1.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="chapter_1_1_1.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
-                            </a>
-                            <a rel="next" href="chapter_1_1_2.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <i class="fa fa-angle-right"></i>
                             </a>
                         <div style="clear: both"></div>
                     </nav>
@@ -200,11 +175,8 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="chapter_1_1.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="chapter_1_1_1.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
-                    </a>
-                    <a rel="next" href="chapter_1_1_2.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
 

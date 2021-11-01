@@ -76,7 +76,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_1.html"><strong aria-hidden="true">1.</strong> 构造过程抽象</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1.html"><strong aria-hidden="true">1.1.</strong> 程序设计的基本元素</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1_1.html"><strong aria-hidden="true">1.1.1.</strong> 表达式</a></li></ol></li></ol></li></ol>
+                <ol class="chapter"><li class="chapter-item expanded "><a href="chapter_1.html"><strong aria-hidden="true">1.</strong> 构造过程抽象</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1.html"><strong aria-hidden="true">1.1.</strong> 程序设计的基本元素</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="chapter_1_1_1.html"><strong aria-hidden="true">1.1.1.</strong> 表达式</a></li><li class="chapter-item expanded "><a href="chapter_1_1_2.html"><strong aria-hidden="true">1.1.2.</strong> 命名和环境</a></li></ol></li></ol></li></ol>
             </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
@@ -226,6 +226,33 @@
 </code></pre>
 <p>这就是遵循一种称为 <strong>美观打印</strong> 的格式规则。按照这种规则，在写一个很长的组合式时，我们令其中的各个运算对象垂直对齐。这样缩格排列的结果能很好地显示出表达式的结构。</p>
 <p>即使对于非常复杂的表达式，解释器也总是按同样的基本循环运作：从终端读入一个表达式，对这个表达式求值，而后打印出得到的结果。这种运作模式常常被人们说成是解释器运行在一个 <strong>读入—求值—打印 循环</strong> 之中。请特别注意，在这里完全没有必要显式地去要求解释器打印表达式的值。</p>
+<div style="break-before: page; page-break-before: always;"></div><h3 id="112-命名和环境"><a class="header" href="#112-命名和环境">1.1.2 命名和环境</a></h3>
+<p>程序设计语言中一个必不可少的方面，就是它需要提供一种通过名字去使用计算对象的方式。我们将名字标识符称为 <strong>变量</strong> ，它的 <strong>值</strong> 也就是它所对应的那个对象。</p>
+<p>在 Lisp 方言 Scheme 里，给事物命名通过 <code>define</code> （定义）的方式完成，输入：</p>
+<pre><code>(define size 2)
+</code></pre>
+<p>会导致解释器将值 <code>2</code> 与名字 <code>size</code> 相关联。一旦名字 <code>size</code> 与 <code>2</code> 关联之后，我们就可以通过这个名字去引用值 <code>2</code> 了：</p>
+<pre><code>size
+2
+
+(* 5 size)
+10
+</code></pre>
+<p>下面是另外几个使用 <code>define</code> 的例子：</p>
+<pre><code>(define pi 3.14159)
+
+(define radius 10)
+
+(* pi (* radius radius))
+314.159
+
+(define circumference (* 2 pi radius))
+
+circumference
+62.8318
+</code></pre>
+<p><code>define</code> 是我们所用的语言里最简单的抽象方法，它允许我们用一个简单的名字去引用一个组合运算的结果，例如上面算出的 <code>circumference</code> 。一般而言，计算得到的对象完全可以具有非常复杂的结构，如果每次需要使用它们时，都必须记住并重复地写出它们的细节，那将是极端不方便的事情。实际上，构造一个复杂的程序，也就是为了去一步步地创建出越来越复杂的计算性对象。解释器使这种逐步的程序构造过程变得非常方便，因为我们可以通过一系列交互式动作，逐步创建起所需要的名字—对象关联。这种特征鼓励人们采用递增的方式去开发和调试程序。在很大程度上，这一情况也出于另一个事实，那就是，一个 Lisp 程序通常总是由一大批相对简单的过程组成的。</p>
+<p>应该看到，我们可以将值与符号关联，而后又能提取出这些值，这意味着解释器必须维护某种存储能力，以便保持有关的名字—值对偶的轨迹。这种存储被称为 <strong>环境</strong> （更精确地说，是 <strong>全局环境</strong> ，因为我们以后将看到，在一个计算过程中完全可能涉及若干不同环境）。</p>
 
                     </main>
 
@@ -241,20 +268,6 @@
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script type="text/javascript">
-            var socket = new WebSocket("ws://localhost:3000/__livereload");
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
         <script type="text/javascript">
             window.playground_copyable = true;
         </script>
