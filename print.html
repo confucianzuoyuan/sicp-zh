@@ -280,6 +280,7 @@ circumference
 <p>请注意，上面给出的求值规则并没有处理定义。例如，对 <code>(define x 3)</code> 的求值并不是将 <code>define</code> 应用于它的两个实际参数：其中的一个是符号 <code>x</code> 的值，另一个是 <code>3</code> 。这是因为 <code>define</code> 的作用就是为 <code>x</code> 关联一个值（也就是说， <code>(define x 3)</code> 并不是一个组合式）。</p>
 <p>一般性求值规则的这种例外称为 <strong>特殊形式</strong> ， <code>define</code> 是至今我们已经看到的唯一的一种特殊形式，下面还将看到另外一些特殊形式。每个特殊形式都有其自身的求值规则，各种不同种类的表达式（每种有着与之相关联的求值规则）组成了程序设计语言的语法形式。与大部分其他程序设计语言相比， Lisp 的语法非常简单。也就是说，对各种表达式的求值规则可以描述为一个简单的通用规则和一组针对不多的特殊形式的专门规则。</p>
 <div style="break-before: page; page-break-before: always;"></div><h3 id="114-复合过程"><a class="header" href="#114-复合过程">1.1.4 复合过程</a></h3>
+<p>我们已经看到了 Lisp 里的某些元素，它们必然也会出现在任何一种强有力的程序设计语言里。这些东西包括：</p>
 <div style="break-before: page; page-break-before: always;"></div><h3 id="115-过程应用的代换模型"><a class="header" href="#115-过程应用的代换模型">1.1.5 过程应用的代换模型</a></h3>
 <div style="break-before: page; page-break-before: always;"></div><h3 id="116-条件表达式和谓词"><a class="header" href="#116-条件表达式和谓词">1.1.6 条件表达式和谓词</a></h3>
 <div style="break-before: page; page-break-before: always;"></div><h3 id="117-实例采用牛顿法求平方根"><a class="header" href="#117-实例采用牛顿法求平方根">1.1.7 实例：采用牛顿法求平方根</a></h3>
