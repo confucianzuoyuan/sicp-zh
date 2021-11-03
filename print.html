@@ -384,6 +384,11 @@ circumference
 <p>Lisp 采用应用序求值，部分原因在于这样做能避免对于表达式的重复求值（例如上面的 <code>(+ 5 1)</code> 和 <code>(* 5 2)</code> 的情况），从而可以提高一些效率。更重要的是，在超出了可以采用替换方式模拟的过程范围之后，正则序的处理将变得更复杂得多。而在另一些方面，正则序也可以成为特别有价值的工具，我们将在第 3 章和第 4 章研究它的某些内在性质。</p>
 <div style="break-before: page; page-break-before: always;"></div><h3 id="116-条件表达式和谓词"><a class="header" href="#116-条件表达式和谓词">1.1.6 条件表达式和谓词</a></h3>
 <p>至此我们能定义出的过程类的表达能力还非常有限，因为还没办法去做某些检测，而后依据检测的结果去确定做不同的操作。例如，我们还无法定义一个过程，使它能计算出一个数的绝对值。完成此事需要先检查一个数是正的、负的或者零，而后依据遇到的不同情况，按照下面规则采取不同的动作：</p>
+<p>\[|x| = \begin{cases}
+x &amp; 如果  &amp; x &gt; 0\\
+0 &amp; 如果  &amp; x = 0\\
+-x &amp; 如果  &amp; x &lt; 0\\
+\end{cases}\]</p>
 <p>这种结构称为一个 <strong>分情况分析</strong> ，在 Lisp 里有着一种针对这类分情况分析的特殊形式，称为 <code>cond</code> （表示“条件”）。在使用形式如下：</p>
 <pre><code>(define (abs x)
   (cond ((&gt; x 0) x)
@@ -392,12 +397,109 @@ circumference
 </code></pre>
 <p>条件表达式的一般性形式为：</p>
 <blockquote>
-<p>(cond (&lt;\( p_1 \)&gt; &lt;\( e_1 \)&gt;)
-(&lt;\( p_2 \)&gt; &lt;\( e_2 \)&gt;)
-...
-...
-(&lt;\( p_n \)&gt; &lt;\( e_n \)&gt;))</p>
+<p>(cond (&lt;\(p_1\)&gt; &lt;\(e_1\)&gt;)<br />
+      (&lt;\(p_2\)&gt; &lt;\(e_2\)&gt;)<br />
+      ...<br />
+      (&lt;\(p_n\)&gt; &lt;\(e_n\)&gt;))</p>
 </blockquote>
+<p>这里首先包含了一个符号 <code>cond</code> ，在它之后跟着一些称为 <strong>子句</strong> 的用括号括起来的表达式对偶（&lt;\(p\)&gt; &lt;\(e\)&gt;）。在每个对偶中的第一个表达式是一个 <strong>谓词</strong> ，也就是说，这是一个表达式，它的值将被解释为真或者假。</p>
+<p>条件表达式的求值方式如下：首先求值谓词 &lt;\(p_1\)&gt; ，如果它的值是 <code>false</code> ，那么就去求值 &lt;\(p_2\)&gt; ，如果 &lt;\(p_2\)&gt; 的值是 <code>false</code> 就去求值 &lt;\(p_3\)&gt; 。这一过程将继续做下去，直到发现了某个谓词的值为真为止。此时解释器就返回相应子句中的 <strong>序列表达式&lt;\(e\)&gt;</strong> 的值，以这个值作为整个条件表达式的值。如果无法找到值为真的 &lt;\(p\)&gt; ， <code>cond</code> 的值就没有定义。</p>
+<p>我们用术语 <strong>谓词</strong> 指那些返回真或假的过程，也指那种能求出真或者假的值的表达式。求绝对值的过程 <code>abs</code> 使用了基本谓词 <code>&gt;</code> 、 <code>&lt;</code> 和 <code>=</code> ，这几个谓词都以两个数为参数，分别检查第一个数是否大于、小于或者等于第二个数，并据此分别返回真或者假。</p>
+<p>写绝对值函数的另一种方式是：</p>
+<pre><code>(define (abs x)
+  (cond ((&lt; x 0) (- x))
+        (else x)))
+</code></pre>
+<p>用自然语言来说，就是“如果 <code>x</code> 小于 <code>0</code> 就返回 <code>-x</code> ，否则就返回 <code>x</code> ”。 <code>else</code> 是一个特殊符号，可以用在 <code>cond</code> 的最后一个子句中 &lt;\(p\)&gt; 的位置，这样做时，如果该 <code>cond</code> 前面的所有子句都被跳过，它就会返回最后子句中 &lt;\(e\)&gt; 的值。事实上，所有永远都求出真值的表达式都可以用在 &lt;\(p\)&gt; 的位置上。</p>
+<p>下面是又一种写绝对值函数的方式：</p>
+<pre><code>(define (abs x)
+  (if (&lt; x 0)
+      (- x)
+      x))
+</code></pre>
+<p>这里采用的是特殊形式 <code>if</code> ，它是条件表达式的一种受限形式，适用于分情况分析中只有两个情况的需要。 <code>if</code> 表达式的一般形式是：</p>
+<blockquote>
+<p>(if &lt;<em>predicate</em>&gt; &lt;<em>consequent</em>&gt; &lt;<em>alternative</em>&gt;)</p>
+</blockquote>
+<p>在求值一个 <code>if</code> 表达式时，解释器从求值其 &lt;<em>predicate</em>&gt; 部分开始，如果 &lt;<em>predicate</em>&gt; 得到真值，解释器就去求值 &lt;<em>consequent</em>&gt; 并返回其值，否则它就去求值 &lt;<em>alternative</em>&gt; 并返回其值。</p>
+<p>除了一批基本谓词如 <code>&lt;</code> 、<code>=</code> 和 <code>&gt;</code> 之外，还有一些逻辑复合运算符，利用它们可以构造出各种复合谓词。最常用的三个复合运算符是：</p>
+<ul>
+<li>(and &lt;\(e_1\)&gt; ... &lt;\(e_2\)&gt;)</li>
+</ul>
+<p>解释器将从左到右一个个地求值 &lt;\(e\)&gt; ，如果某个 &lt;\(e\)&gt; 求值得到假，这一 <code>and</code> 表达式的值就是假，后面的那些 &lt;\(e\)&gt; 也不再求值了。如果前面所有的 &lt;\(e\)&gt; 都求出真值，这一 <code>and</code> 表达式的值就是最后那个 &lt;\(e\)&gt; 的值。</p>
+<ul>
+<li>(or &lt;\(e_1\)&gt; ... &lt;\(e_2\)&gt;)</li>
+</ul>
+<p>解释器将从左到右一个个地求值 &lt;\(e\)&gt; ，如果某个 &lt;\(e\)&gt; 求值得到真， <code>or</code> 表达式就以这个表达式的值作为值，后面的那些 &lt;\(e\)&gt; 也不再求值了。如果所有的 &lt;\(e\)&gt; 都求出假值，这一 <code>or</code> 表达式的值就是假。</p>
+<ul>
+<li>(not &lt;\(e\)&gt;)</li>
+</ul>
+<p>如果 &lt;\(e\)&gt; 求出的值是假， <code>not</code> 表达式的值就是真；否则其值为假。</p>
+<p>注意， <code>and</code> 和 <code>or</code> 都是特殊形式而不是普通的过程，因为它们的子表达式不一定都求值。 <code>not</code> 则是一个普通的过程。</p>
+<p>作为使用这些逻辑复合运算符的例子，数 <code>x</code> 的值位于区间 \(5 &lt; x &lt; 10\) 之中的条件可以写为：</p>
+<pre><code>(and (&gt; x 5) (&lt; x 10))
+</code></pre>
+<p>作为另一个例子，下面定义了一个谓词，它检测某个数是否大于或者等于另一个数：</p>
+<pre><code>(define (&gt;= x y)
+  (or (&gt; x y) (= x y)))
+</code></pre>
+<p>或者也可以定义为：</p>
+<pre><code>(define (&gt;= x y)
+  (not (&lt; x y)))
+</code></pre>
+<p><strong>练习 1.1</strong> 下面是一系列表达式，对于每个表达式，解释器将输出什么结果？假定这一系列表达式是按照给出的顺序逐个求值的。</p>
+<pre><code>10
+
+(+ 5 3 4)
+
+(- 9 1)
+
+(/ 6 2)
+
+(+ (* 2 4) (- 4 6))
+
+(define a 3)
+
+(define b (+ a 1))
+
+(+ a b (* a b))
+
+(= a b)
+
+(if (and (&gt; b a) (&lt; b (* a b)))
+    b
+    a)
+
+(cond ((= a 4) 6)
+      ((= b 4) (+ 6 7 a))
+      (else 25))
+
+(+ 2 (if (&gt; b a) b a))
+
+(* (cond ((&gt; a b) a)
+         ((&lt; a b) b)
+         (else -1))
+   (+ a 1))
+</code></pre>
+<p><strong>练习 1.2</strong> 请将下面表达式变换为前缀形式：</p>
+<p>\[\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}\]</p>
+<p><strong>练习 1.3</strong> 请定义一个过程，它以三个数为参数，返回其中较大的两个数之和。</p>
+<p><strong>练习 1.4</strong> 请仔细考察上面给出的允许运算符为复合表达式的组合式的求值模型，根据对这一模型的认识描述下面过程的行为：</p>
+<pre><code>(define (a-plus-abs-b a b)
+  ((if (&gt; b 0) + -) a b))
+</code></pre>
+<p><strong>练习 1.5</strong> Ben Bitdiddle 发明了一种检测方法，能够确定解释器究竟采用哪种序求值，是采用应用序，还是采用正则序。他定义了下面两个过程：</p>
+<pre><code>(define (p) (p))
+
+(define (test x y)
+  (if (= x 0)
+      0
+      y))
+</code></pre>
+<p>而后他求值下面的表达式：</p>
+<pre><code>(test 0 (p))
+</code></pre>
+<p>如果某个解释器采用的是应用序求值， Ben 会看到什么样的情况？如果解释器采用正则序求值，他又会看到什么情况？请对你的回答做出解释。（无论采用正则序或者应用序，假定特殊形式 <code>if</code> 的求值规则总是一样的。其中的谓词部分先行求值，根据其结果确定随后求值的子表达式部分。）</p>
 <div style="break-before: page; page-break-before: always;"></div><h3 id="117-实例采用牛顿法求平方根"><a class="header" href="#117-实例采用牛顿法求平方根">1.1.7 实例：采用牛顿法求平方根</a></h3>
 <div style="break-before: page; page-break-before: always;"></div><h3 id="118-过程作为黑箱抽象"><a class="header" href="#118-过程作为黑箱抽象">1.1.8 过程作为黑箱抽象</a></h3>
 
