@@ -25,6 +25,8 @@
         <link rel="stylesheet" href="ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     </head>
     <body>
         <!-- Provide site root to javascript -->
@@ -154,6 +156,35 @@
 <p>过程定义的一般形式是：</p>
 <pre><code>(define (&lt;name&gt; &lt;formal parameters&gt;) &lt;body&gt;)
 </code></pre>
+<p>其中 <code>&lt;name&gt;</code> 是一个符号，过程定义将在环境中关联于这个符号。 <code>&lt;formal parameters&gt;</code> （形式参数）是一些名字，它们用在过程体中，用于表示过程应用时与它们对应的各个实际参数。 <code>&lt;body&gt;</code> 是一个表达式，在应用这一过程时，这一表达式中的形式参数将用与之对应的实际参数取代，对这样取代后的表达式里的求值，产生出这个过程应用的值。 <code>&lt;name&gt;</code> 和 <code>&lt;formal parameters&gt;</code> 被放在一对括号里，成为一组，就像实际调用被定义过程时的写法。</p>
+<p>定义好 <code>square</code> 之后，我们就可以使用它了：</p>
+<pre><code>(square 21)
+441
+
+(square (+ 2 5))
+49
+
+(square (square 3))
+81
+</code></pre>
+<p>我们还可以用 <code>square</code> 作为基本构件去定义其他过程。例如， \( x^2 + y^2 \) 可以表述为：</p>
+<pre><code>(+ (square x) (square y))
+</code></pre>
+<p>现在我们很容易定义一个过程 <code>sum-of-squares</code> ，给它两个数作为实际参数，让它产生这两个数的平方和：</p>
+<pre><code>(define (sum-of-squares x y)
+  (+ (square x) (square y)))
+
+(sum-of-squares 3 4)
+25
+</code></pre>
+<p>现在我们又可以用 <code>sum-of-squares</code> 作为构件，进一步去构造其他过程：</p>
+<pre><code>(define (f a)
+  (sum-of-squares (+ a 1) (* a 2)))
+
+(f 5)
+136
+</code></pre>
+<p>复合过程的使用方式与基本过程完全一样。实际上，如果人们只看上面 <code>sum-of-squares</code> 的定义，根本就无法分辨出 <code>square</code> 究竟是（像 <code>+</code> 和 <code>*</code> 那样）直接做在解释器里呢，还是被定义为一个复合过程。</p>
 
                     </main>
 
